@@ -148,4 +148,4 @@ verifyMao(player1)
 
 
 
-#1. Função que verifica mãos do poker
+#1. Função que verifica desempate, mesma coisa da mão normal, mas ignora a mão inicial e vai na segunda.
