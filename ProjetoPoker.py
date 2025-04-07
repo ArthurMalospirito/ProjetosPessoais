@@ -10,8 +10,7 @@ algarismos = ["0","1","2","3","4","5","6","7","8","9","J","Q","K","A"]
 ordemCartas=["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
 
 listaRTF =["10","J","Q","K","A"]
-listaStraight=[["A","2","3","4","5"],["6","2","3","4","5"],["6","7","3","4","5"],["6","7","8","4","5"],["6","7","8","9","5"],["6","7","8","9","10"],["J","7","8","9","10"],["J","Q","8","9","10"],["J","Q","K","9","10"],["J","Q","K","A","10"]]
-
+listaStraight=[["J","Q","K","A","10"],["J","Q","K","9","10"],["J","Q","8","9","10"],["J","7","8","9","10"],["6","7","8","9","10"],["6","7","8","9","5"],["6","7","8","4","5"],["6","7","3","4","5"],["6","2","3","4","5"],["A","2","3","4","5"]]
 class players:
     
     def __init__(self,cardsReal,cards,iOuro,iEspada,iCopas,iPaus,mao,iMaiorQtd,nome,stack,funcao,aposta,check,fold):
@@ -30,6 +29,35 @@ class players:
         self.check: bool = check
         self.fold: bool = fold
 
+def valorLiteral(valorStr):
+    match valorStr:
+
+        case "A":
+            return 13
+        case "K":
+            return 12
+        case "Q":
+            return 11
+        case "J":
+            return 10
+        case "10":
+            return 9
+        case "9":
+            return 8
+        case "8":
+            return 7
+        case "7":
+            return 6
+        case "6":
+            return 5
+        case "5":
+            return 4
+        case "4":
+            return 3
+        case "3":
+            return 2
+        case "2":
+            return 1
 
 def novaCarta(player,carta): #Adiciona nova carta ao player, coloca o valor na lista de Card e o naipe no seu respectivo contador, e as cartas reais na lista visual
     valorCartaAdd =""
@@ -64,6 +92,8 @@ def verifyMao(player):
         
         if all(elem in player.cards for elem in listaRTF):
             player.mao.insert(0,"RSF")
+            player.mao.insert(1,None)
+            player.mao.insert(2,None)
             player.mao.insert(3,10)
             #return print("Royal Straight Flush")
             RSF=True
@@ -73,6 +103,7 @@ def verifyMao(player):
                 if all(elem in player.cards for elem in listaStraight[i]):
                     player.mao.insert(0,"SF")
                     player.mao.insert(1,i)
+                    player.mao.insert(2,None)
                     player.mao.insert(3,9)
                     #return print("Straight Flush")
                     SF=True
@@ -93,6 +124,7 @@ def verifyMao(player):
                     if letra==naipeTemp:
                         cartasDoFlush.append(carta)
             player.mao.insert(1,cartasDoFlush)
+            player.mao.insert(2,None)
             player.mao.insert(3,6)
             #return print("Flush")
     
@@ -101,17 +133,20 @@ def verifyMao(player):
         straight=False
 
         for i in range(0,len(listaStraight)):
-            if all(elem in player.cards for elem in listaStraight[i]):
-                player.mao.insert(0,"straight")
-                player.mao.insert(1,i)
-                player.mao.insert(3,5)
-                #return print("Straight")
-                straight=True
+            if straight==False:
+                if all(elem in player.cards for elem in listaStraight[i]):
+                    player.mao.insert(0,"straight")
+                    player.mao.insert(1,i)
+                    player.mao.insert(2,None)
+                    player.mao.insert(3,5)
+                    #return print("Straight")
+                    straight=True
             
         if straight==False:
             if player.iMaiorQtd[0][1]>=4:
                 player.mao.insert(0,"poker")
                 player.mao.insert(1,player.iMaiorQtd[0][0])
+                player.mao.insert(2,None)
                 player.mao.insert(3,8)
                 #return print("Poker")
             
@@ -125,6 +160,7 @@ def verifyMao(player):
             elif player.iMaiorQtd[0][1]>=3:
                 player.mao.insert(0,"trio")
                 player.mao.insert(1,player.iMaiorQtd[0][0])
+                player.mao.insert(2,None)
                 player.mao.insert(3,4)
                 #return print("Trio")
             
@@ -138,6 +174,7 @@ def verifyMao(player):
             elif player.iMaiorQtd[0][1]>=2:
                 player.mao.insert(0,"par")
                 player.mao.insert(1,player.iMaiorQtd[0][0])
+                player.mao.insert(2,None)
                 player.mao.insert(3,2)
                 #return print("Par")
             
@@ -148,26 +185,123 @@ def verifyMao(player):
                     if ordemCartas.index(carta)>ordemCartas.index(HC):
                         HC = carta
                 player.mao.insert(1,HC)
+                player.mao.insert(2,None)
                 player.mao.insert(3,1)
                 #return print("High Card")
     
-def decidirGanhador(listaDeJogadores:list):
-    ganhador=listaDeJogadores[0].mao[3]
+def decidirGanhador(listaDeJogadores:list): #ALGO ERRO EM NÍVEIS ABSURDOS
+    maoGanhador=listaDeJogadores[0].mao[3]
     empate=[]
+    ganhador=listaDeJogadores[0]
     for player in listaDeJogadores:
-        if player.mao[3]<ganhador:
-            pass
-        elif player.mao[3]==ganhador:
-            empate.append(player)
-        else:
-            ganhador = player.mao[3]
-    
-    if len(empate)>=2:
+        if player!=listaDeJogadores[0]:
+            if player.mao[3]==maoGanhador:
+                empate.append(player)
+            elif player.mao[3]>maoGanhador:
+                maoGanhador = player.mao[3]
+                ganhador = player
+                print(f"Novo ganhador {ganhador.nome}")
+    #DESEMPATE
+    if len(empate)>1 and empate[0].mao[3]>=maoGanhador:
         print("Desempate")
+        maiorMao=None
+        vencedorDesempate=None
+        if empate[0].mao[3]==10:
+            print("Desempate RSF")
+
+        elif empate[0].mao[3]==9:
+            print("Desempate SF")
+            maiorMao=empate[0].mao[1]
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if player.mao[1]<maiorMao:
+                    maiorMao = player.mao[1]
+                    vencedorDesempate=player
+        
+        elif empate[0].mao[3]==8:
+            print("Desempate Poker")
+            maiorMao=valorLiteral(empate[0].mao[1])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorMao:
+                    maiorMao = valorLiteral(player.mao[1])
+                    vencedorDesempate =player
+        
+        elif empate[0].mao[3]==7:
+            print("Desempate FH")
+            maiorTrio=valorLiteral(empate[0].mao[1])
+            maiorPar=valorLiteral(empate[0].mao[2])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorTrio:
+                    maiorTrio=valorLiteral(player.mao[1])
+                    vencedorDesempate=player
+                elif valorLiteral(player.mao[1])==maiorTrio:
+                    if valorLiteral(player.mao[2])>maiorPar:
+                        maiorTrio=valorLiteral(player.mao[1])
+                        vencedorDesempate=player
+                    elif valorLiteral(player.mao[2])==maiorPar and player!=vencedorDesempate:
+                        return print("Empate em FH")
+
+        elif empate[0].mao[3]==6:
+            print("Desempate flush (MEdonho)")
+
+
+        elif empate[0].mao[3]==5:
+            print("Desempate Straight")
+            maiorMao=empate[0].mao[1]
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if player.mao[1]<maiorMao:
+                    maiorMao = player.mao[1]
+                    vencedorDesempate=player
+
+        elif empate[0].mao[3]==4:
+            print("Desempate trio")
+            maiorMao=valorLiteral(empate[0].mao[1])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorMao:
+                    maiorMao = valorLiteral(player.mao[1])
+                    vencedorDesempate =player
+
+        elif empate[0].mao[3]==3:
+            print("Desempate 2par")
+            maiorTrio=valorLiteral(empate[0].mao[1])
+            maiorPar=valorLiteral(empate[0].mao[2])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorTrio:
+                    maiorTrio=valorLiteral(player.mao[1])
+                    vencedorDesempate=player
+                elif valorLiteral(player.mao[1])==maiorTrio:
+                    if valorLiteral(player.mao[2])>maiorPar:
+                        maiorTrio=valorLiteral(player.mao[1])
+                        vencedorDesempate=player
+                    elif valorLiteral(player.mao[2])==maiorPar and player!=vencedorDesempate:
+                        return print("Empate em 2par")
+
+        elif empate[0].mao[3]==2:
+            print("Desempate par")
+            maiorMao=valorLiteral(empate[0].mao[1])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorMao:
+                    maiorMao = valorLiteral(player.mao[1])
+                    vencedorDesempate =player
+        
+        elif empate[0].mao[3]==1:
+            print("Desempate HC")
+            maiorMao=valorLiteral(empate[0].mao[1])
+            vencedorDesempate=empate[0]
+            for player in empate:
+                if valorLiteral(player.mao[1])>maiorMao:
+                    maiorMao = valorLiteral(player.mao[1])
+                    vencedorDesempate =player
+        
+        return vencedorDesempate
     else:
         return ganhador
-    
-
     
 
 player1 = players([],[],0,0,0,0,[],[],"",1000,"",0,False,False)
@@ -183,15 +317,15 @@ player1 = players([],[],0,0,0,0,[],[],"",1000,"",0,False,False)
 #cartasParaAdd=["8♣","8♥","8♠","2♦","4♣","7♥","A♦"] #Trio
 #cartasParaAdd=["8♣","8♥","5♣","4♥","4♠","7♦","A♦"] #Dois Pares
 #cartasParaAdd=["8♣","8♠","6♥","Q♦","4♣","7♥","A♠"] #Par
-#cartasParaAdd=["2♣","5♥","8♠","A♦","4♣","7♥","Q♠"] #High Card
+# cartasParaAdd=["2♣","5♥","8♠","A♦","4♣","7♥","Q♠"] #High Card
 
 # for i in cartasParaAdd:
 #     novaCarta(player1,i)
 
-# for i in range(0,7):
-#     newCard = random.choice(cartasBaralhoRest)
-#     cartasBaralhoRest.remove(newCard)
-#     novaCarta(player1,newCard)
+# # for i in range(0,7):
+# #     newCard = random.choice(cartasBaralhoRest)
+# #     cartasBaralhoRest.remove(newCard)
+# #     novaCarta(player1,newCard)
 
 # print(player1.cardsReal)
 # verifyMao(player1)
@@ -290,7 +424,7 @@ rodada = 1
 contadorFold=0
 maiorAposta = 5
 pot = 0
-while rodada<=3:
+while rodada<=4:
     for i in ordemPlayers:
         if primeiroTruno==True:
             if i==0:
@@ -442,6 +576,7 @@ while rodada<=3:
 
 ListaDeVencedores =[]
 
+print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 print("Acabou!")
 if ganhouPorFold==True:
     for player in listPlayers:
@@ -455,10 +590,12 @@ else:
     ganhador = decidirGanhador(ListaDeVencedores)
 
     
-
-print(f"O ganhador foi {ganhador.nome}")
+for player in listPlayers:
+    print(f"A mão do jogador {player.nome} foi: {player.mao}\n")
+print(f"\nO ganhador foi {ganhador.nome}\n")
 
 
 
 
 #1. Função que verifica desempate, mesma coisa da mão normal, mas ignora a mão inicial e vai na segunda.
+#2. Rever a rodada, rodada só pode passar se todos os que não foldaram deram check/Pagaram a mão
