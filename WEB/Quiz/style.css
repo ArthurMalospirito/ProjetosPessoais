@@ -20,6 +20,17 @@ header .inicio a{
     align-items: center;
 }
 
+.outrosSites {
+    display: flex;
+    justify-content: space-between;
+}
+
+.outrosSites a{
+    color: rgba(225, 225, 225, 1);
+    text-decoration: none;
+    margin: 0px 25px;
+}
+
 .links{
     text-align: center;
     margin: 10px 20px;
@@ -59,9 +70,11 @@ main select {
     margin: 100px;
 }
 
+/*
 .introducao h1{
     font-size: 50px;
 }
+*/
 
 .introducao p{
     font-size: 20px;
@@ -150,4 +163,8 @@ main select {
     height: 30px;
 
 
+}
+
+footer {
+    margin: 0px 10%;
 }
