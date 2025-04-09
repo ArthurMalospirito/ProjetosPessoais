@@ -3,24 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Quiz matemática</title>
+    
+    <!--Colocando style dentro do HEAD-->
+    <style> 
+        h1{
+            font-size: 50px;
+        }
+    </style> 
+
+    <link rel="stylesheet" href="style.css" /> <!--Chamando o CSS-->
+    
+    <title>Quiz matemática</title> <!--Título da página-->
   </head>
   <body>
     <!--Cabeçalho-->
     <header>
-        <!--Imagem Inicial-->
+        
       <div class="inicio">
-        <img src="pi.png" alt="Símbolo PI matemática" />
-        <a href="">Início</a>
+        <img src="pi.png" alt="Símbolo PI matemática" /> <!--Imagem Inicial-->
+        <a href="">Início</a> <!--Texto "Início"-->
       </div>
+
+      <!--Outros "Sites"-->
+      <div class="outrosSites">
+        <a href="">Login</a>
+        <a href="">Algo Mais</a>
+        <a href="">Sei lá O que</a>
+
+      </div>
+
       <!--Links-->
       <div class="links">
         <a
           target="_blank"
           href="https://youtu.be/YhGBnUmP25Q?si=qNQAc3_3JI3WNb4D"
-          >Música Boa</a
-        >
+        >Música Boa</a> <!--Link Música-->
       </div>
     </header>
 
@@ -28,7 +45,7 @@
       <!--Introdução-->
       <section class="introducao">
         <h1>Quiz de matemática</h1>
-        <p>Um simples quiz de matemática.</p>
+        <p style="font-size: 24px;">Um <strong>simples</strong> quiz de matemática.</p> <!--Colocando CSS inline-->
       </section>
       <!--Pergunta 1:-->
       <section class="pergunta1">
