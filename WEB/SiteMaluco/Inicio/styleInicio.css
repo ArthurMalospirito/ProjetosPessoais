@@ -1,0 +1,61 @@
+body{
+    background-color: rgba(27, 30, 35, 1);
+    margin: 0px;
+    padding: 0px;
+    color: aliceblue;
+}
+
+.inicio img {
+    width: 50px;
+    height: 50px;
+    margin: 0.5rem;
+}
+
+header {
+    background-color: rgba(37, 40, 45, 1);
+    border-radius: 0px 0px 1rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid rgba(97, 100, 105, 1);
+}
+
+.explicacao{
+    margin: 3rem 10%;
+    text-align: center;
+}
+
+.explicacao h1 {
+    font-size: 3.2rem;
+}
+
+.explicacao p {
+    font-size: 1.3rem;
+}
+
+.blocos {
+    display: flex;
+    justify-content: space-between;
+    margin: 1.5rem;
+}
+
+.bloco {
+    background-color: rgba(37, 40, 45, 1);
+    border: 1px solid aliceblue;
+    width: 30%;
+    height: fit-content;
+    text-align: center;
+    margin: 1.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.bloco img{
+    width: 250px;
+    height: auto;
+    margin: 1.5rem;
+}
+
+.bloco h2 {
+    margin: 1.5rem;
+}
